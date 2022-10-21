@@ -1,6 +1,6 @@
 [package]
 name = "migration"
-version = "0.1.0"
+version = '0.0.7'
 edition = "2021"
 publish = false
 
@@ -10,7 +10,7 @@ path = "src/lib.rs"
 
 [dependencies]
 async-std = { version = "^1", features = ["attributes", "tokio1"] }
-entity = { version = "0.1.0", path = "../schema", aliases = ["entity"]}
+entities = { path = "../entities"}
 [dependencies.sea-orm-migration]
 version = "^0.9.0"
 features = [
