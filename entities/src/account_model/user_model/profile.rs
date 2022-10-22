@@ -6,12 +6,18 @@ use crate::*;
 #[graphql(name = "Profile")]
 pub struct Model {
     #[sea_orm(primary_key)]
-    pub id: u64,
+    #[filter(use_alias = true)]
+    pub id: AccountId,
+    pub first_name: Option<String>,
+    pub middle_name: Option<String>,
+    pub last_name: Option<String>,
+    pub surname: Option<String>,
     pub name: Option<String>,
-    pub avatar: Option<String>,
+
+    // pub avatar: Option<String>,
     pub description: Option<String>,
-    pub mobile: Option<String>,
-    pub email: Option<String>,
+    // pub mobile: Option<String>,
+    // pub email: Option<String>,
     pub address_id: u32,
 }
 

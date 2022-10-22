@@ -6,15 +6,18 @@ use crate::*;
 #[graphql(name = "Token")]
 pub struct Model {
     #[sea_orm(primary_key)]
-    pub id: u32,
-    pub user_id: i32,
-    // token: SecureToken,
+    #[filter(use_alias = true)]
+    // prop=UnionId+Time=AccountId+AppId+Time
+    pub id: OpenId,
+    #[filter(use_alias = true)]
+    pub token: UserAccessToken,
+
     // pub name: String,
-    pub token: String,
     pub api_type: String,
-    pub created_at: DateTimeUtc,
-    pub last_used_at: Option<DateTimeUtc>,
-    pub revoked: bool,
+    #[filter(use_alias = true)]
+    pub expire: TimeAlias,
+    // pub last_used_at: Option<DateTimeUtc>,
+    // pub revoked: bool,
 }
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation, RelationsCompact)]
 pub enum Relation {

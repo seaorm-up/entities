@@ -1,15 +1,22 @@
 use crate::*;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, async_graphql::SimpleObject, Filter)]
+#[derive(
+    Clone,
+    Debug,
+    PartialEq,
+    DeriveEntityModel,
+    async_graphql::SimpleObject,
+    seaography::macros::Filter,
+)]
 #[sea_orm(table_name = "user")]
 #[graphql(complex)]
 #[graphql(name = "User")]
 pub struct Model {
     #[sea_orm(primary_key)]
-    pub id: u32,
-    pub first_name: String,
-    pub middle_name: String,
-    pub last_name: String,
+    #[filter(use_alias = true)]
+    pub id: AccountId,
+    pub user_name: String,
+    pub passwrod: String,
     pub avatar: Option<String>,
     pub account_lock_reason: Option<String>,
     pub account_lock_until: Option<DateTimeUtc>,
@@ -33,29 +40,29 @@ impl Related<crate::profile::Entity> for Entity {
 
 impl ActiveModelBehavior for ActiveModel {}
 
-#[tokio::test]
-async fn test_querying() {
-    use crate::*;
-    #[derive(Debug, QueryRoot)]
-    #[seaography(entity = "crate::user")]
-    #[seaography(entity = "crate::profile")]
-    pub struct QueryRoot;
-    let schema = get_schema(QueryRoot).await;
-    let obj = schema
-        .execute(
-            r#"
-      {
-        profile(pagination: {limit: 2, page: 1}) {
-            data{
-                id
-                name
-                # lastName
-            }
+// #[tokio::test]
+// async fn test_querying() {
+//     use crate::*;
+//     #[derive(Debug, QueryRoot)]
+//     #[seaography(entity = "crate::user")]
+//     #[seaography(entity = "crate::profile")]
+//     pub struct QueryRoot;
+//     let schema = get_schema(QueryRoot).await;
+//     let obj = schema
+//         .execute(
+//             r#"
+//       {
+//         profile(pagination: {limit: 2, page: 1}) {
+//             data{
+//                 id
+//                 name
+//                 # lastName
+//             }
 
-        }
-      }
-      "#,
-        )
-        .await;
-    println!("{:#?}", obj);
-}
+//         }
+//       }
+//       "#,
+//         )
+//         .await;
+//     println!("{:#?}", obj);
+// }
