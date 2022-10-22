@@ -1,13 +1,6 @@
-use sea_orm::entity::prelude::*;
+use crate::*;
 
-#[derive(
-    Clone,
-    Debug,
-    PartialEq,
-    DeriveEntityModel,
-    async_graphql::SimpleObject,
-    seaography::macros::Filter,
-)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, SimpleObject, Filter)]
 #[sea_orm(table_name = "city")]
 #[graphql(complex)]
 #[graphql(name = "City")]
@@ -18,7 +11,7 @@ pub struct Model {
     pub country_id: u16,
 }
 
-#[derive(Copy, Clone, Debug, EnumIter, DeriveRelation, seaography::macros::RelationsCompact)]
+#[derive(Copy, Clone, Debug, EnumIter, DeriveRelation, RelationsCompact)]
 pub enum Relation {
     #[sea_orm(
         belongs_to = "super::country::Entity",

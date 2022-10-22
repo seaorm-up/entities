@@ -8,20 +8,42 @@ pub struct Model {
     #[sea_orm(primary_key)]
     #[filter(use_alias = true)]
     pub id: AccountId,
-    pub name: Option<String>,
-    pub avatar: Option<String>,
-    pub org_id: Option<u32>,
-    pub user_team_id: u64,
 }
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation, RelationsCompact)]
 pub enum Relation {
-    //     #[sea_orm(has_one = "super::profile::Entity")]
-    //     Profile,
-    // }
-    // impl Related<crate::profile::Entity> for Entity {
-    //     fn to() -> RelationDef {
-    //         Relation::Profile.def()
-    //     }
+    #[sea_orm(
+        belongs_to = "crate::team_profile::Entity",
+        from = "Column::Id",
+        to = "crate::team_profile::Column::Id"
+    )]
+    TeamProfile,
+    #[sea_orm(
+        belongs_to = "crate::account::Entity",
+        from = "Column::Id",
+        to = "crate::account::Column::Id"
+    )]
+    Account,
+    #[sea_orm(
+        belongs_to = "crate::org_account::Entity",
+        from = "Column::Id",
+        to = "crate::org_account::Column::OrgId"
+    )]
+    OrgAccount,
+}
+impl Related<crate::team_profile::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::TeamProfile.def()
+    }
+}
+impl Related<crate::account::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Account.def()
+    }
+}
+impl Related<crate::org_account::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::OrgAccount.def()
+    }
 }
 
 impl ActiveModelBehavior for ActiveModel {}

@@ -8,46 +8,34 @@ pub struct Model {
     #[sea_orm(primary_key)]
     #[filter(use_alias = true)]
     pub id: AccountId,
-    pub first_name: Option<String>,
-    pub middle_name: Option<String>,
-    pub last_name: Option<String>,
-    pub surname: Option<String>,
-    pub name: Option<String>,
-
-    // pub avatar: Option<String>,
+    pub avatar: Option<String>,
     pub description: Option<String>,
-    // pub mobile: Option<String>,
-    // pub email: Option<String>,
-    pub address_id: u32,
+}
+#[derive(Copy, Clone, Debug, EnumIter, DeriveRelation, RelationsCompact)]
+pub enum Relation {
+    #[sea_orm(
+        belongs_to = "crate::user_profile::Entity",
+        from = "Column::Id",
+        to = "crate::user_profile::Column::Id"
+    )]
+    UserProfile,
+    #[sea_orm(
+        belongs_to = "crate::team_profile::Entity",
+        from = "Column::Id",
+        to = "crate::team_profile::Column::Id"
+    )]
+    TeamProfile,
 }
 
-#[derive(Copy, Clone, Debug, EnumIter, DeriveRelation, seaography::macros::RelationsCompact)]
-pub enum Relation {
-    //     #[sea_orm(
-    //         belongs_to = "super::address::Entity",
-    //         from = "Column::AddressId",
-    //         to = "super::address::Column::AddressId",
-    //         on_update = "Cascade",
-    //         on_delete = "NoAction"
-    //     )]
-    //     Address,
-    //     #[sea_orm(
-    //         belongs_to = "super::user::Entity",
-    //         on_update = "Cascade",
-    //         on_delete = "Cascade"
-    //     )]
-    //     User,
-    // }
-
-    // // impl Related<super::address::Entity> for Entity {
-    // //     fn to() -> RelationDef {
-    // //         Relation::Address.def()
-    // //     }
-    // // }
-    // impl Related<super::user::Entity> for Entity {
-    //     fn to() -> RelationDef {
-    //         Relation::User.def()
-    //     }
+impl Related<crate::user_profile::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::UserProfile.def()
+    }
+}
+impl Related<crate::team_profile::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::TeamProfile.def()
+    }
 }
 
 impl ActiveModelBehavior for ActiveModel {}

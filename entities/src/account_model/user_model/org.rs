@@ -13,25 +13,27 @@ use crate::*;
 #[graphql(name = "Org")]
 pub struct Model {
     #[sea_orm(primary_key)]
-    pub id: u32,
+    #[filter(use_alias = true)]
+    pub id: OpenDepartmentId,
     pub avatar: Option<String>,
     pub description: Option<String>,
     pub documentation: Option<String>,
     pub homepage: Option<String>,
     pub name: String,
     pub repository: Option<String>,
-    // pub created_at: DateTimeUtc,
-    // pub updated_at: DateTimeUtc,
 }
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation, RelationsCompact)]
 pub enum Relation {
-    //     #[sea_orm(has_one = "super::profile::Entity")]
-    //     Profile,
-    // }
-    // impl Related<crate::profile::Entity> for Entity {
-    //     fn to() -> RelationDef {
-    //         Relation::Profile.def()
-    //     }
+    #[sea_orm(
+        belongs_to = "crate::org_account::Entity",
+        from = "Column::Id",
+        to = "crate::org_account::Column::OrgId"
+    )]
+    OrgAccount,
 }
-
+impl Related<crate::org_account::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::OrgAccount.def()
+    }
+}
 impl ActiveModelBehavior for ActiveModel {}
